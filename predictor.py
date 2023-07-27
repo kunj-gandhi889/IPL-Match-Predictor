@@ -7,6 +7,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import time
 st.set_option('deprecation.showPyplotGlobalUse', False)
+st.set_page_config(page_title='IPL Win Predictor',layout="wide")
 
 color = ["#ebdd1c","#4835f2","#ff0000","#861bbf","#0c71ed","#e831d9","#bd0000","#bd4800"]  # color theme of teams
 tagline = ["Whistle Podu","Ye hai nayi dilli","Live Punjabi Play Punjabi","Korbo Lorbo Jeetbo Re","Duniya hila Denge Hum","Halla Bol","Play Bold","Orange Army"]
