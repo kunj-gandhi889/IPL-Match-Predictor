@@ -2,7 +2,7 @@
 import random
 import numpy as np 
 import streamlit as st  # for web app gui
-import pickle
+import pickle,bz2
 import pandas as pd
 import matplotlib.pyplot as plt
 import time
@@ -11,13 +11,13 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 color = ["#ebdd1c","#4835f2","#ff0000","#861bbf","#0c71ed","#e831d9","#bd0000","#bd4800"]  # color theme of teams
 tagline = ["Whistle Podu","Ye hai nayi dilli","Live Punjabi Play Punjabi","Korbo Lorbo Jeetbo Re","Duniya hila Denge Hum","Halla Bol","Play Bold","Orange Army"]
 
-with open("Teams.pkl","rb") as f:
+with bz2.BZ2File("Teams.pbz2","rb") as f:
     teams = pickle.load(f)
-with open("Cities.pkl","rb") as f:
+with bz2.BZ2File("Cities.pbz2","rb") as f:
     cities = pickle.load(f)
-with open("struct.pkl","rb") as f:
+with bz2.BZ2File("struct.pbz2","rb") as f:
     pipe_o = pickle.load(f)
-with open("final_df.pkl","rb") as f:
+with bz2.BZ2File("final_df.pbz2","rb") as f:
     final_data = pickle.load(f)
 
 def getImage(team):   # for logo
@@ -39,7 +39,7 @@ def match_prob(id,pipe):
     xyz = final_data.query(f"((balls_faced>=114 and balls_faced<=119) or balls_faced%6 ==0 ) and match_id == {id}")
     xyz.sort_values("balls_faced",inplace=True)
     wxy = xyz[xyz["balls_faced"]%6==0]
-    wxy = wxy.append(xyz.iloc[-1])
+    wxy = pd.concat([wxy,xyz.iloc[-1].to_frame().T])
     data = wxy.iloc[:,1:-1]
     result = pipe.predict_proba(data)
     data["lose_prob"] = np.round(result.T[0]*100,1)
@@ -206,8 +206,3 @@ else:
 
     st.subheader("Library Used")
     st.markdown("<ul><li>PANDAS : for Data Cleaning and Analyzing The Datasets</li> <li>MATPLOTLIB : for Data Visualization</li><li>NUMPY : for Handling The Data in DataFrame and Manipulating it</li><li>SCIKIT-LEARN / SKLEARN : Machine Learning Library used for Building the Model and applying preprocessing to Data , Training and Testing The Data</li><li>STREAMLIT : for creating simple Web-Based GUI</li><li>PICKLE : For Pickling The Python Object Structure in Byte Stream</li></ul>",unsafe_allow_html=True)
-    
-    st.markdown("<h2 style='text-align:center;color:red'>TEAM MEMBERS</h2>",unsafe_allow_html=True)
-    st.subheader("Kunj Gandhi - 20BCE073")
-    st.subheader("Rajdeep Bodar - 20BCE032")
-    st.subheader("Divyrajsinh Chudasama - 20BCE046")
